@@ -11,7 +11,7 @@ use std::collections::HashMap;
 async fn main() -> Result<(), ()> {
     let client = Client::try_default().await.unwrap();
     let namespaces = std::env::var("NAMESPACES")
-        .unwrap_or("default".into())
+        .unwrap_or_else(|_| "default".into())
         .replace(" ", "");
     loop {
         for namespace in namespaces.split(",") {
@@ -31,7 +31,7 @@ async fn main() -> Result<(), ()> {
                             let mut csi = vcs.iter();
                             if loop {
                                 if let Some(cs) = csi.next() {
-                                    let s = cs.image.split("/").collect::<Vec<&str>>();
+                                    let s = cs.image.split('/').collect::<Vec<&str>>();
                                     if let Some(new_id) = look_up_id(
                                         p,
                                         {
@@ -54,7 +54,7 @@ async fn main() -> Result<(), ()> {
                                             "cs image id:{:?} - new id {:?}",
                                             cs.image_id, new_id
                                         );
-                                        if cs.image_id.split("@").collect::<Vec<&str>>()[1]
+                                        if cs.image_id.split('@').collect::<Vec<&str>>()[1]
                                             != new_id
                                         {
                                             break true;
@@ -119,7 +119,7 @@ async fn look_up_id(
             if let Some(creds) = &secret {
                 let creds = String::from_utf8(base64::decode(creds).unwrap()).unwrap();
                 let (username, password) = {
-                    let s = creds.split(":").collect::<Vec<&str>>();
+                    let s = creds.split(':').collect::<Vec<&str>>();
                     (s[0], s[1])
                 };
                 dclient = dclient
@@ -128,7 +128,7 @@ async fn look_up_id(
             }
             if let Ok(client) = dclient.build() {
                 let client = if secret.is_some() {
-                    if let Ok(client) = client.clone().authenticate(&vec!["registry"]).await {
+                    if let Ok(client) = client.clone().authenticate(&["registry"]).await {
                         client
                     } else {
                         client
@@ -137,7 +137,7 @@ async fn look_up_id(
                     client
                 };
                 let (name, tag) = {
-                    let s = image.split(":").collect::<Vec<&str>>();
+                    let s = image.split(':').collect::<Vec<&str>>();
                     (s[0], s[1])
                 };
                 match client.get_manifest_and_ref(name, tag).await {
