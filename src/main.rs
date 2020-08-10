@@ -54,7 +54,9 @@ async fn main() -> Result<(), ()> {
                                             "cs image id:{:?} - new id {:?}",
                                             cs.image_id, new_id
                                         );
-                                        if cs.image_id.split("@").collect::<Vec<&str>>()[1] != new_id {
+                                        if cs.image_id.split("@").collect::<Vec<&str>>()[1]
+                                            != new_id
+                                        {
                                             break true;
                                         }
                                     }
