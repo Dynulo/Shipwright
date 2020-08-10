@@ -14,7 +14,7 @@ async fn main() -> Result<(), ()> {
         .unwrap_or_else(|_| "default".into())
         .replace(" ", "");
     loop {
-        for namespace in namespaces.split(",") {
+        for namespace in namespaces.split(',') {
             let pod_api = Api::<Pod>::namespaced(client.clone(), &namespace);
             let secret_api = Api::<Secret>::namespaced(client.clone(), &namespace);
             let pods = match pod_api.list(&ListParams::default()).await {
