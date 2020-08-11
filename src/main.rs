@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use dkregistry::v2::Client as DKClient;
 use k8s_openapi::api::core::v1::{Pod, Secret};
 use kube::{
@@ -5,79 +7,75 @@ use kube::{
     Api, Client,
 };
 use serde::Deserialize;
-use std::collections::HashMap;
 
 #[tokio::main]
 async fn main() -> Result<(), ()> {
     let client = Client::try_default().await.unwrap();
-    let namespaces = std::env::var("NAMESPACES")
+    let namespaces = std::env::var("SHIPWRIGHT_NAMESPACES")
         .unwrap_or_else(|_| "default".into())
         .replace(" ", "");
+    let interval = std::env::var("SHIPWRIGHT_INTERVAL")
+        .unwrap_or_else(|_| "60".into())
+        .parse::<u64>()
+        .unwrap();
     loop {
         for namespace in namespaces.split(',') {
-            let pod_api = Api::<Pod>::namespaced(client.clone(), &namespace);
-            let secret_api = Api::<Secret>::namespaced(client.clone(), &namespace);
-            let pods = match pod_api.list(&ListParams::default()).await {
-                Ok(pods) => pods,
-                Err(e) => {
-                    println!("error {:?}", e);
-                    continue;
-                }
-            };
-            for p in pods.iter() {
-                match &p.status {
-                    Some(ps) => match &ps.container_statuses {
-                        Some(vcs) => {
-                            let mut csi = vcs.iter();
-                            if loop {
-                                if let Some(cs) = csi.next() {
-                                    let s = cs.image.split('/').collect::<Vec<&str>>();
-                                    if let Some(new_id) = look_up_id(
-                                        p,
-                                        {
-                                            String::from(if s.len() > 2 {
-                                                s[0]
-                                            } else {
-                                                "https://index.docker.io/v1"
-                                            })
-                                        },
-                                        if s.len() > 2 {
-                                            s[1..].join("/")
-                                        } else {
-                                            cs.image.clone()
-                                        },
-                                        &secret_api,
-                                    )
-                                    .await
-                                    {
-                                        println!(
-                                            "cs image id:{:?} - new id {:?}",
-                                            cs.image_id, new_id
-                                        );
-                                        if cs.image_id.split('@').collect::<Vec<&str>>()[1]
-                                            != new_id
-                                        {
-                                            break true;
-                                        }
-                                    }
+            check(namespace, &client).await;
+        }
+        std::thread::sleep(std::time::Duration::from_secs(interval));
+    }
+}
+
+async fn check(namespace: &str, client: &Client) {
+    let pod_api = Api::<Pod>::namespaced(client.clone(), &namespace);
+    let secret_api = Api::<Secret>::namespaced(client.clone(), &namespace);
+    let pods = match pod_api.list(&ListParams::default()).await {
+        Ok(pods) => pods,
+        Err(e) => {
+            println!("error {:?}", e);
+            return;
+        }
+    };
+    for p in pods.iter() {
+        if let Some(ps) = &p.status {
+            if let Some(vcs) = &ps.container_statuses {
+                let mut csi = vcs.iter();
+                if loop {
+                    if let Some(cs) = csi.next() {
+                        let s = cs.image.split('/').collect::<Vec<&str>>();
+                        if let Some(new_id) = look_up_id(
+                            p,
+                            {
+                                String::from(if s.len() > 2 {
+                                    s[0]
                                 } else {
-                                    break false;
-                                }
-                            } {
-                                if let Err(e) =
-                                    pod_api.delete(&p.name(), &DeleteParams::default()).await
-                                {
-                                    println!("{:?}", e)
-                                }
+                                    "https://index.docker.io/v1"
+                                })
+                            },
+                            if s.len() > 2 {
+                                s[1..].join("/")
+                            } else {
+                                cs.image.clone()
+                            },
+                            &secret_api,
+                        )
+                        .await
+                        {
+                            println!("cs image id:{:?} - new id {:?}", cs.image_id, new_id);
+                            if cs.image_id.split('@').collect::<Vec<&str>>()[1] != new_id {
+                                break true;
                             }
                         }
-                        None => {}
-                    },
-                    None => {}
+                    } else {
+                        break false;
+                    }
+                } {
+                    if let Err(e) = pod_api.delete(&p.name(), &DeleteParams::default()).await {
+                        println!("{:?}", e)
+                    }
                 }
             }
         }
-        std::thread::sleep(std::time::Duration::from_secs(60));
     }
 }
 
