@@ -12,7 +12,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <p align="center">
-  <a href="https://github.com/dynulo/Shipwright">
+  <a href="https://github.com/Dynulo/Shipwright">
     <img src="docs/images/logo.png" alt="Logo" width="80" height="80">
   </a>
 
@@ -21,12 +21,12 @@
   <p align="center">
     Cycle latest pods in Kubernetes development clusters.
     <br />
-    <a href="https://dynulo.github.io/Shipwright"><strong>Explore the docs »</strong></a>
+    <a href="https://Dynulo.github.io/Shipwright"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/dynulo/Shipwright/issues">Report Bug</a>
+    <a href="https://github.com/Dynulo/Shipwright/issues">Report Bug</a>
     ·
-    <a href="https://github.com/dynulo/Shipwright/issues">Request Feature</a>
+    <a href="https://github.com/Dynulo/Shipwright/issues">Request Feature</a>
   </p>
 </p>
 
@@ -72,18 +72,18 @@ Helm chart and all-in-one deploy file coming soon
 
 Environment Variables:
 
-*SHIPWRIGHT_NAMESPACES* - Namespaces for Shipwright to check, if left empty it will only check the namespace it is deployed to.
+*Shipwright_NAMESPACES* - Namespaces for Shipwright to check, if left empty it will only check the namespace it is deployed to.
 
-*SHIPWRIGHT_INTERVAL* - Interval to check pods in seconds, defaults to 60
+*Shipwright_INTERVAL* - Interval to check pods in seconds, defaults to 60
 
-_For more information, please refer to the [Documentation](https://dynulo.github.io/shipwright)_
+_For more information, please refer to the [Documentation](https://Dynulo.github.io/Shipwright)_
 
 
 
 <!-- ROADMAP -->
 ## Roadmap
 
-See the [open issues](https://github.com/dynulo/Shipwright/issues) for a list of proposed features (and known issues).
+See the [open issues](https://github.com/Dynulo/Shipwright/issues) for a list of proposed features (and known issues).
 
 
 
@@ -110,18 +110,18 @@ Distributed under the MIT License. See `LICENSE` for more information.
 <!-- CONTACT -->
 ## Contact
 
-Project Link: [https://github.com/dynulo/shipwright](https://github.com/dynulo/shipwright)
+Project Link: [https://github.com/Dynulo/Shipwright](https://github.com/Dynulo/Shipwright)
 
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
-[contributors-shield]: https://img.shields.io/github/contributors/dynulo/Shipwright.svg?style=flat-square
-[contributors-url]: https://github.com/dynulo/Shipwright/graphs/contributors
-[forks-shield]: https://img.shields.io/github/forks/dynulo/Shipwright.svg?style=flat-square
-[forks-url]: https://github.com/dynulo/Shipwright/network/members
-[stars-shield]: https://img.shields.io/github/stars/dynulo/Shipwright.svg?style=flat-square
-[stars-url]: https://github.com/dynulo/Shipwright/stargazers
-[issues-shield]: https://img.shields.io/github/issues/dynulo/Shipwright.svg?style=flat-square
-[issues-url]: https://github.com/dynulo/Shipwright/issues
-[license-shield]: https://img.shields.io/github/license/dynulo/Shipwright.svg?style=flat-square
-[license-url]: https://github.com/dynulo/Shipwright/blob/master/LICENSE.txt
+[contributors-shield]: https://img.shields.io/github/contributors/Dynulo/Shipwright.svg?style=flat-square
+[contributors-url]: https://github.com/Dynulo/Shipwright/graphs/contributors
+[forks-shield]: https://img.shields.io/github/forks/Dynulo/Shipwright.svg?style=flat-square
+[forks-url]: https://github.com/Dynulo/Shipwright/network/members
+[stars-shield]: https://img.shields.io/github/stars/Dynulo/Shipwright.svg?style=flat-square
+[stars-url]: https://github.com/Dynulo/Shipwright/stargazers
+[issues-shield]: https://img.shields.io/github/issues/Dynulo/Shipwright.svg?style=flat-square
+[issues-url]: https://github.com/Dynulo/Shipwright/issues
+[license-shield]: https://img.shields.io/github/license/Dynulo/Shipwright.svg?style=flat-square
+[license-url]: https://github.com/Dynulo/Shipwright/blob/master/LICENSE.txt
