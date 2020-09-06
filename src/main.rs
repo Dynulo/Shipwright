@@ -40,13 +40,16 @@ async fn check(namespace: &str, client: &Client) {
         if let Some(ps) = &p.status {
             let containers = match &p.spec {
                 Some(spec) => spec.containers.clone(),
-                None => Vec::new()
+                None => Vec::new(),
             };
             if let Some(vcs) = &ps.container_statuses {
                 let mut csi = vcs.iter();
                 if loop {
                     if let Some(cs) = csi.next() {
-                        if containers.iter().any(|c| c.image == Some(cs.image.clone()) && c.image_pull_policy == Some("Always".to_string())) {
+                        if containers.iter().any(|c| {
+                            c.image == Some(cs.image.clone())
+                                && c.image_pull_policy == Some("Always".to_string())
+                        }) {
                             let s = cs.image.split('/').collect::<Vec<&str>>();
                             if let Some(new_id) = look_up_id(
                                 p,
