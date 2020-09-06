@@ -651,7 +651,7 @@ dependencies = [
 
 [[package]]
 name = "kube"
-version = "0.39.0"
+version = "0.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "Inflector 0.11.4 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -680,14 +680,14 @@ dependencies = [
 
 [[package]]
 name = "kube-runtime"
-version = "0.39.0"
+version = "0.40.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 dependencies = [
  "dashmap 3.11.10 (registry+https://github.com/rust-lang/crates.io-index)",
  "derivative 2.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "k8s-openapi 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "kube 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "kube 0.40.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "pin-project 0.4.23 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.115 (registry+https://github.com/rust-lang/crates.io-index)",
  "smallvec 1.4.2 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1275,14 +1275,14 @@ dependencies = [
 
 [[package]]
 name = "shipwright"
-version = "0.1.1"
+version = "0.2.0"
 dependencies = [
  "base64 0.12.3 (registry+https://github.com/rust-lang/crates.io-index)",
  "dkregistry 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "futures 0.3.5 (registry+https://github.com/rust-lang/crates.io-index)",
  "k8s-openapi 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "kube 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
- "kube-runtime 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "kube 0.40.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "kube-runtime 0.40.0 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde 1.0.115 (registry+https://github.com/rust-lang/crates.io-index)",
  "serde_json 1.0.57 (registry+https://github.com/rust-lang/crates.io-index)",
  "tokio 0.2.22 (registry+https://github.com/rust-lang/crates.io-index)",
@@ -1896,8 +1896,8 @@ dependencies = [
 "checksum js-sys 0.3.44 (registry+https://github.com/rust-lang/crates.io-index)" = "85a7e2c92a4804dd459b86c339278d0fe87cf93757fae222c3fa3ae75458bc73"
 "checksum k8s-openapi 0.9.0 (registry+https://github.com/rust-lang/crates.io-index)" = "57f95fd36c08ce592e67400a0f1a66f432196997d5a7e9a97e8743c33d8a9312"
 "checksum kernel32-sys 0.2.2 (registry+https://github.com/rust-lang/crates.io-index)" = "7507624b29483431c0ba2d82aece8ca6cdba9382bff4ddd0f7490560c056098d"
-"checksum kube 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)" = "756d6f58e5d45db5defa2632590d411d41640bc735986813fe682bd88e3abe68"
-"checksum kube-runtime 0.39.0 (registry+https://github.com/rust-lang/crates.io-index)" = "334eb0a1e31f2c8e6b5c72a0b04ff2d633c3e15931946b6b0dcc4954c4705964"
+"checksum kube 0.40.0 (registry+https://github.com/rust-lang/crates.io-index)" = "be34ed86dca3021a649b574a1628917d694bb75650a3b50c492e1786589a5ac6"
+"checksum kube-runtime 0.40.0 (registry+https://github.com/rust-lang/crates.io-index)" = "6292e1359c338da559c201a7be496c70f328eaa4d39d312356a39a579d7f1f29"
 "checksum lazy_static 1.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 "checksum libc 0.2.76 (registry+https://github.com/rust-lang/crates.io-index)" = "755456fae044e6fa1ebbbd1b3e902ae19e73097ed4ed87bb79934a867c007bc3"
 "checksum libflate 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)" = "e9bac9023e1db29c084f9f8cd9d3852e5e8fddf98fb47c4964a0ea4663d95949"

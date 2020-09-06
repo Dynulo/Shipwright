@@ -1,18 +1,16 @@
 [package]
 name = "shipwright"
-version = "0.1.1"
+version = "0.2.0"
 authors = ["Prince <mandeep@mandeepsingh.ca>", "Brett <brett@mayson.io>"]
 edition = "2018"
-
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 base64 = "0.12"
 dkregistry = "0.4"
 futures = "0.3.5"
 k8s-openapi = { version = "0.9.0", default-features = false, features = ["v1_17"] }
-kube = "0.39.0"
-kube-runtime = "0.39.0"
+kube = "0.40.0"
+kube-runtime = "0.40.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 tokio = { version = "0.2", features = ["full"] }
