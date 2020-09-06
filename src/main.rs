@@ -70,8 +70,15 @@ async fn check(namespace: &str, client: &Client) {
                         break false;
                     }
                 } {
-                    if let Err(e) = pod_api.delete(&p.name(), &DeleteParams::default()).await {
-                        println!("{:?}", e)
+                    match pod_api.delete(&p.name(), &DeleteParams::default()).await {
+                        Ok(pod) => {
+                            let pod = pod.left();
+                            match pod {
+                                Some(po) => while po.namespace().is_some() {},
+                                None => {}
+                            }
+                        }
+                        Err(e) => println!("{:?}", e),
                     }
                 }
             }
