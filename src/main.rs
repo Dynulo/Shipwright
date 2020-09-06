@@ -128,7 +128,9 @@ async fn check(namespace: &str, client: &Client) {
                     match pod_api.delete(&p.name(), &DeleteParams::default()).await {
                         Ok(pod) => {
                             if let Some(po) = pod.left() {
-                                while po.namespace().is_some() {}
+                                while Api::<Pod>::namespaced(client.clone(), namespace).get(&po.name()).await.is_ok() {
+                                    std::thread::sleep(std::time::Duration::from_millis(250));
+                                }
                             }
                         }
                         Err(e) => error!("{:?}", e),
