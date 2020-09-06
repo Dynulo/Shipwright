@@ -1,5 +1,9 @@
 use std::collections::HashMap;
 
+#[macro_use]
+extern crate log;
+use simplelog::*;
+
 use dkregistry::v2::Client as DKClient;
 use k8s_openapi::api::core::v1::{Pod, Secret};
 use kube::{
@@ -10,14 +14,39 @@ use serde::Deserialize;
 
 #[tokio::main]
 async fn main() -> Result<(), ()> {
-    let client = Client::try_default().await.unwrap();
+    let args: Vec<_> = std::env::args().collect();
+    let level = if args.contains(&String::from("--debug")) {
+        LevelFilter::Debug
+    } else if args.contains(&String::from("--trace")) {
+        LevelFilter::Trace
+    } else {
+        LevelFilter::Info
+    };
+
+    if let Err(e) = TermLogger::init(level, Config::default(), TerminalMode::Mixed) {
+        println!("unable to initaliaze logger {:?}", e);
+        std::process::exit(1)
+    };
+
+    let client = match Client::try_default().await {
+        Ok(client) => client,
+        Err(e) => {
+            error!("unable to initalize kube client {:?}", e);
+            std::process::exit(1)
+        }
+    };
+
     let namespaces = std::env::var("SHIPWRIGHT_NAMESPACES")
         .unwrap_or_else(|_| "default".into())
         .replace(" ", "");
+    debug!("loading namespaces {:?}", namespaces);
+
     let interval = std::env::var("SHIPWRIGHT_INTERVAL")
         .unwrap_or_else(|_| "60".into())
         .parse::<u64>()
         .unwrap();
+    debug!("setting check interval for {:?}", interval);
+
     loop {
         for namespace in namespaces.split(',') {
             check(namespace, &client).await;
@@ -27,16 +56,21 @@ async fn main() -> Result<(), ()> {
 }
 
 async fn check(namespace: &str, client: &Client) {
+    debug!("checking namespace {:?}", namespace);
     let pod_api = Api::<Pod>::namespaced(client.clone(), &namespace);
     let secret_api = Api::<Secret>::namespaced(client.clone(), &namespace);
     let pods = match pod_api.list(&ListParams::default()).await {
-        Ok(pods) => pods,
+        Ok(pods) => {
+            debug!("found {:?} pods", pods.items.len());
+            pods
+        }
         Err(e) => {
-            println!("error {:?}", e);
+            error!("error {:?}", e);
             return;
         }
     };
     for p in pods.iter() {
+        debug!("iterating over pod {:?}", p);
         if let Some(ps) = &p.status {
             let containers = match &p.spec {
                 Some(spec) => spec.containers.clone(),
@@ -69,7 +103,7 @@ async fn check(namespace: &str, client: &Client) {
                             )
                             .await
                             {
-                                println!("cs image id:{:?} - new id {:?}", cs.image_id, new_id);
+                                debug!("cs image id:{:?} - new id {:?}", cs.image_id, new_id);
                                 if cs.image_id.split('@').collect::<Vec<&str>>()[1] != new_id {
                                     break true;
                                 }
@@ -79,14 +113,16 @@ async fn check(namespace: &str, client: &Client) {
                         break false;
                     }
                 } {
+                    debug!("attempting to delete pod {:?}", p.name());
                     match pod_api.delete(&p.name(), &DeleteParams::default()).await {
                         Ok(pod) => {
                             if let Some(po) = pod.left() {
                                 while po.namespace().is_some() {}
                             }
                         }
-                        Err(e) => println!("{:?}", e),
+                        Err(e) => error!("{:?}", e),
                     }
+                    info!("pod {:?} refreshed", p.name());
                 }
             }
         }
@@ -99,7 +135,7 @@ async fn look_up_id(
     image: String,
     secret_api: &Api<Secret>,
 ) -> Option<String> {
-    println!("check for image {:?} on registry {:?}", image, registry);
+    debug!("check for image {:?} on registry {:?}", image, registry);
     if let Some(spec) = &p.spec {
         if let Some(vips) = &spec.image_pull_secrets {
             let secret = {
@@ -129,7 +165,22 @@ async fn look_up_id(
                 .insecure_registry(false)
                 .registry(&registry);
             if let Some(creds) = &secret {
-                let creds = String::from_utf8(base64::decode(creds).unwrap()).unwrap();
+                let decoded_creds = match base64::decode(creds) {
+                    Ok(c) => c,
+                    Err(e) => {
+                        error!("unable to decode creds {:?}", e);
+                        return None;
+                    }
+                };
+
+                let creds = match String::from_utf8(decoded_creds) {
+                    Ok(c) => c,
+                    Err(e) => {
+                        error!("unable to parse creds to string {:?}", e);
+                        return None;
+                    }
+                };
+
                 let (username, password) = {
                     let s = creds.split(':').collect::<Vec<&str>>();
                     (s[0], s[1])
@@ -141,6 +192,7 @@ async fn look_up_id(
             if let Ok(client) = dclient.build() {
                 let client = if secret.is_some() {
                     if let Ok(client) = client.clone().authenticate(&["registry"]).await {
+                        info!("authenticated with registry");
                         client
                     } else {
                         client
@@ -155,10 +207,11 @@ async fn look_up_id(
                 match client.get_manifest_and_ref(name, tag).await {
                     Ok((_, hash)) => {
                         if let Some(hash) = hash {
+                            debug!("found new image id {:?}", hash);
                             return Some(hash);
                         }
                     }
-                    Err(e) => println!("{:?}", e),
+                    Err(e) => error!("{:?}", e),
                 }
             }
         }
