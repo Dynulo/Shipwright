@@ -38,32 +38,38 @@ async fn check(namespace: &str, client: &Client) {
     };
     for p in pods.iter() {
         if let Some(ps) = &p.status {
+            let containers = match &p.spec {
+                Some(spec) => spec.containers.clone(),
+                None => Vec::new()
+            };
             if let Some(vcs) = &ps.container_statuses {
                 let mut csi = vcs.iter();
                 if loop {
                     if let Some(cs) = csi.next() {
-                        let s = cs.image.split('/').collect::<Vec<&str>>();
-                        if let Some(new_id) = look_up_id(
-                            p,
-                            {
-                                String::from(if s.len() > 2 {
-                                    s[0]
+                        if containers.iter().any(|c| c.image == Some(cs.image.clone()) && c.image_pull_policy == Some("Always".to_string())) {
+                            let s = cs.image.split('/').collect::<Vec<&str>>();
+                            if let Some(new_id) = look_up_id(
+                                p,
+                                {
+                                    String::from(if s.len() > 2 {
+                                        s[0]
+                                    } else {
+                                        "https://index.docker.io/v1"
+                                    })
+                                },
+                                if s.len() > 2 {
+                                    s[1..].join("/")
                                 } else {
-                                    "https://index.docker.io/v1"
-                                })
-                            },
-                            if s.len() > 2 {
-                                s[1..].join("/")
-                            } else {
-                                cs.image.clone()
-                            },
-                            &secret_api,
-                        )
-                        .await
-                        {
-                            println!("cs image id:{:?} - new id {:?}", cs.image_id, new_id);
-                            if cs.image_id.split('@').collect::<Vec<&str>>()[1] != new_id {
-                                break true;
+                                    cs.image.clone()
+                                },
+                                &secret_api,
+                            )
+                            .await
+                            {
+                                println!("cs image id:{:?} - new id {:?}", cs.image_id, new_id);
+                                if cs.image_id.split('@').collect::<Vec<&str>>()[1] != new_id {
+                                    break true;
+                                }
                             }
                         }
                     } else {
