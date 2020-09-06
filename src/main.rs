@@ -72,10 +72,8 @@ async fn check(namespace: &str, client: &Client) {
                 } {
                     match pod_api.delete(&p.name(), &DeleteParams::default()).await {
                         Ok(pod) => {
-                            let pod = pod.left();
-                            match pod {
-                                Some(po) => while po.namespace().is_some() {},
-                                None => {}
+                            if let Some(po) = pod.left() {
+                                while po.namespace().is_some() {}
                             }
                         }
                         Err(e) => println!("{:?}", e),
