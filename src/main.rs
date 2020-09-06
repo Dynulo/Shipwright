@@ -5,7 +5,7 @@ extern crate log;
 use simplelog::*;
 
 use dkregistry::v2::Client as DKClient;
-use k8s_openapi::api::core::v1::{Pod, Secret};
+use k8s_openapi::api::core::v1::{Pod, Namespace, Secret};
 use kube::{
     api::{DeleteParams, ListParams, Meta},
     Api, Client,
@@ -50,7 +50,12 @@ async fn main() -> Result<(), ()> {
     info!("starting shipwright");
     loop {
         for namespace in namespaces.split(',') {
-            check(namespace, &client).await;
+            if Api::<Namespace>::all(client.clone()).get(namespace).await.is_ok() {
+                check(namespace, &client).await;
+            }
+            else {
+                warn!("unable to find namespace {:?} in cluster", namespace);
+            }
         }
         std::thread::sleep(std::time::Duration::from_secs(interval));
     }
@@ -105,8 +110,13 @@ async fn check(namespace: &str, client: &Client) {
                             .await
                             {
                                 debug!("cs image id:{:?} - new id {:?}", cs.image_id, new_id);
-                                if cs.image_id.split('@').collect::<Vec<&str>>()[1] != new_id {
-                                    break true;
+                                if cs.image_id.contains('@') {
+                                    if cs.image_id.split('@').collect::<Vec<&str>>()[1] != new_id {
+                                        break true;
+                                    }
+                                } else {
+                                    warn!("unable to read image id {:?} for pod {:?}", cs.image_id, p.name());
+                                    break false;
                                 }
                             }
                         }
