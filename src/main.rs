@@ -47,6 +47,7 @@ async fn main() -> Result<(), ()> {
         .unwrap();
     debug!("setting check interval for {:?}", interval);
 
+    info!("starting shipwright");
     loop {
         for namespace in namespaces.split(',') {
             check(namespace, &client).await;
@@ -70,7 +71,7 @@ async fn check(namespace: &str, client: &Client) {
         }
     };
     for p in pods.iter() {
-        debug!("iterating over pod {:?}", p);
+        debug!("iterating over pod {:?}", p.name());
         if let Some(ps) = &p.status {
             let containers = match &p.spec {
                 Some(spec) => spec.containers.clone(),
