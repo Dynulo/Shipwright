@@ -10,6 +10,7 @@ rules:
   - ""
   resources:
   - pods
+  - namespace
   verbs:
   - get
   - list

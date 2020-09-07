@@ -23,6 +23,7 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
+          args: ["/app/shipwright", "--debug"]
           env:
             - name: SHIPWRIGHT_NAMESPACES
               value: {{ join "," .Values.config.namespaces | quote }}
