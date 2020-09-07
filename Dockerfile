@@ -1,12 +1,7 @@
-FROM rustlang/rust:nightly as build
+FROM rust as build
 
 WORKDIR /usr/src/shipwright
 COPY . ./
-
-ARG GITHUB_TOKEN
-RUN git config --global url."https://${GITHUB_TOKEN}@github.com/".insteadOf "https://github.com/"
-
-RUN rustup update nightly; rustup default nightly
 
 RUN cargo build --release
 
