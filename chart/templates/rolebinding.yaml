@@ -8,7 +8,7 @@ metadata:
   namespace: {{- . }}
 subjects:
 - kind: ServiceAccount
-    name: {{ include "shipwright.serviceAccountName" . }}
+    name: {{ include "shipwright.serviceAccountName" $ }}
     namespace: {{ $.Release.Namespace }}
   roleRef:
     kind: Role
