@@ -46,4 +46,5 @@ resources: {}
 
 config:
   interval: "60"
-  namespaces: "default"
+  namespaces:
+    - default
