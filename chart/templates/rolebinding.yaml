@@ -4,7 +4,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 # You need to already have a Role named "pod-reader" in that namespace.
 kind: RoleBinding
 metadata:
-  name: {{ $.Release.Name }}-pod-writer-bind
+  name: {{ $.Release.Name }}-{{ . }}-pod-writer-bind
   namespace: {{ . | quote }}
 subjects:
 - kind: ServiceAccount
