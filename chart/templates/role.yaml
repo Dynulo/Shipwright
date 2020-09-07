@@ -11,6 +11,7 @@ rules:
   resources:
   - pods
   - namespaces
+  - secrets
   verbs:
   - get
   - list
