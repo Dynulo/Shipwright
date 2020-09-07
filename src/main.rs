@@ -5,7 +5,7 @@ extern crate log;
 use simplelog::*;
 
 use dkregistry::v2::Client as DKClient;
-use k8s_openapi::api::core::v1::{Pod, Namespace, Secret};
+use k8s_openapi::api::core::v1::{Namespace, Pod, Secret};
 use kube::{
     api::{DeleteParams, ListParams, Meta},
     Api, Client,
@@ -50,10 +50,13 @@ async fn main() -> Result<(), ()> {
     info!("starting shipwright");
     loop {
         for namespace in namespaces.split(',') {
-            if Api::<Namespace>::all(client.clone()).get(namespace).await.is_ok() {
+            if Api::<Namespace>::all(client.clone())
+                .get(namespace)
+                .await
+                .is_ok()
+            {
                 check(namespace, &client).await;
-            }
-            else {
+            } else {
                 warn!("unable to find namespace {:?} in cluster", namespace);
             }
         }
@@ -86,10 +89,11 @@ async fn check(namespace: &str, client: &Client) {
                 let mut csi = vcs.iter();
                 if loop {
                     if let Some(cs) = csi.next() {
-                        if containers.iter().any(|c| {
+                        let can_update_any = containers.iter().any(|c| {
                             c.image == Some(cs.image.clone())
                                 && c.image_pull_policy == Some("Always".to_string())
-                        }) {
+                        });
+                        if can_update_any {
                             let s = cs.image.split('/').collect::<Vec<&str>>();
                             if let Some(new_id) = look_up_id(
                                 p,
@@ -115,7 +119,11 @@ async fn check(namespace: &str, client: &Client) {
                                         break true;
                                     }
                                 } else {
-                                    warn!("unable to read image id {:?} for pod {:?}", cs.image_id, p.name());
+                                    warn!(
+                                        "unable to read image id {:?} for pod {:?}",
+                                        cs.image_id,
+                                        p.name()
+                                    );
                                     break false;
                                 }
                             }
@@ -128,7 +136,11 @@ async fn check(namespace: &str, client: &Client) {
                     match pod_api.delete(&p.name(), &DeleteParams::default()).await {
                         Ok(pod) => {
                             if let Some(po) = pod.left() {
-                                while Api::<Pod>::namespaced(client.clone(), namespace).get(&po.name()).await.is_ok() {
+                                while Api::<Pod>::namespaced(client.clone(), namespace)
+                                    .get(&po.name())
+                                    .await
+                                    .is_ok()
+                                {
                                     std::thread::sleep(std::time::Duration::from_millis(250));
                                 }
                             }
