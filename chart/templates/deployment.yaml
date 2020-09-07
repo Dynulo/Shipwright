@@ -25,7 +25,7 @@ spec:
         - name: {{ .Chart.Name }}
           env:
             - name: SHIPWRIGHT_NAMESPACES
-              value: {{ .Values.config.namespaces | quote }}
+              value: {{ join "," .Values.config.namespaces | quote }}
             - name: SHIPWRIGHT_INTERVAL
               value: {{ .Values.config.interval | quote }}
           securityContext:
