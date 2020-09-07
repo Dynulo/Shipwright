@@ -1,8 +1,8 @@
-{{- with .Values.config.namespaces}}
+{{- range .Values.config.namespaces }}
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
-  name: {{ .Release.Name }}-pod-writer
+  name: {{ $.Release.Name }}-pod-writer
   namespace: {{ . }}
 rules:
 - apiGroups:
