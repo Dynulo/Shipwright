@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "shipwright.labels" . | nindent 4 }}
 spec:
-{{- if not .Values.autoscaling.enabled }}
-  replicas: {{ .Values.replicaCount }}
-{{- end }}
+  replicas: 1 
   selector:
     matchLabels:
       {{- include "shipwright.selectorLabels" . | nindent 6 }}
@@ -20,10 +18,6 @@ spec:
       labels:
         {{- include "shipwright.selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       serviceAccountName: {{ include "shipwright.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
@@ -31,36 +25,12 @@ spec:
         - name: {{ .Chart.Name }}
           env:
             - name: SHIPWRIGHT_NAMESPACES
-              value: {{ .Values.config.shipwright_namespaces | quote }}
+              value: {{ .Values.config.namespaces | quote }}
             - name: SHIPWRIGHT_INTERVAL
-              value: {{ .Values.config.shipwright_interval | quote }}
+              value: {{ .Values.config.interval | quote }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
