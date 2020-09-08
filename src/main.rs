@@ -217,7 +217,7 @@ async fn look_up_id(
             if let Ok(client) = dclient.build() {
                 let client = if secret.is_some() {
                     if let Ok(client) = client.clone().authenticate(&["registry"]).await {
-                        info!("authenticated with registry");
+                        debug!("authenticated with registry");
                         client
                     } else {
                         client
