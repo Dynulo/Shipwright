@@ -758,16 +758,46 @@ dependencies = [
 ]
 
 [[package]]
-name = "kube-runtime"
-version = "0.40.0"
+name = "kube"
+version = "0.42.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6292e1359c338da559c201a7be496c70f328eaa4d39d312356a39a579d7f1f29"
+checksum = "f4f52dbe2c0e7ca54e43f1bc7b77b916750e63d7694e5a18c09b11307acc6b9d"
+dependencies = [
+ "Inflector",
+ "base64",
+ "bytes",
+ "chrono",
+ "dirs",
+ "either",
+ "futures",
+ "futures-util",
+ "http",
+ "k8s-openapi",
+ "log",
+ "openssl",
+ "pem",
+ "reqwest",
+ "serde",
+ "serde_json",
+ "serde_yaml",
+ "static_assertions",
+ "thiserror",
+ "time 0.2.17",
+ "tokio",
+ "url",
+]
+
+[[package]]
+name = "kube-runtime"
+version = "0.42.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "78d0d3673ec4eff2c5276bd10db8e596106ce9dee8e035e01650a8c84454ac78"
 dependencies = [
  "dashmap",
  "derivative",
  "futures",
  "k8s-openapi",
- "kube",
+ "kube 0.42.0",
  "pin-project",
  "serde",
  "smallvec",
@@ -1428,7 +1458,7 @@ dependencies = [
  "dkregistry",
  "futures",
  "k8s-openapi",
- "kube",
+ "kube 0.40.0",
  "kube-runtime",
  "log",
  "serde",
