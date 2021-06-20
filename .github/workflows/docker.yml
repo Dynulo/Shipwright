@@ -26,8 +26,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
-    - name: build
-      run: cargo build --all
     - name: Publish to Registry
       uses: elgohr/Publish-Docker-Github-Action@master
       env:
