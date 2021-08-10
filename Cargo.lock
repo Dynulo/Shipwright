@@ -821,6 +821,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "k8s-openapi"
+version = "0.13.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "748acc444200aa3528dc131a8048e131a9e75a611a52d152e276e99199313d1a"
+dependencies = [
+ "base64 0.13.0",
+ "bytes 1.0.1",
+ "chrono",
+ "serde",
+ "serde-value",
+ "serde_json",
+]
+
+[[package]]
 name = "kernel32-sys"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -846,7 +860,7 @@ dependencies = [
  "futures-util",
  "http",
  "jsonpath_lib",
- "k8s-openapi",
+ "k8s-openapi 0.9.0",
  "log",
  "openssl",
  "pem",
@@ -870,7 +884,7 @@ dependencies = [
  "dashmap",
  "derivative",
  "futures",
- "k8s-openapi",
+ "k8s-openapi 0.9.0",
  "kube",
  "pin-project 0.4.27",
  "serde",
@@ -1624,7 +1638,7 @@ dependencies = [
  "base64 0.13.0",
  "dkregistry",
  "futures",
- "k8s-openapi",
+ "k8s-openapi 0.13.0",
  "kube",
  "kube-runtime",
  "log",
