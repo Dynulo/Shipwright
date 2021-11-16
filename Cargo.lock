@@ -1631,7 +1631,7 @@ dependencies = [
  "serde",
  "serde_json",
  "simplelog",
- "tokio 1.7.0",
+ "tokio 1.13.1",
 ]
 
 [[package]]
@@ -1953,9 +1953,9 @@ dependencies = [
 
 [[package]]
 name = "tokio"
-version = "1.7.0"
+version = "1.13.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c79ba603c337335df6ba6dd6afc38c38a7d5e1b0c871678439ea973cd62a118e"
+checksum = "52963f91310c08d91cb7bff5786dfc8b79642ab839e188187e92105dbfb9d2c8"
 dependencies = [
  "autocfg",
  "bytes 1.0.1",
