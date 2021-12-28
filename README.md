@@ -8,8 +8,6 @@
 
 </center>
 
-
-<!-- PROJECT LOGO -->
 <br />
 <p align="center">
   <a href="https://github.com/Dynulo/Shipwright">
@@ -30,9 +28,6 @@
   </p>
 </p>
 
-
-
-<!-- TABLE OF CONTENTS -->
 ## Table of Contents
 
 * [About the Project](#about-the-project)
@@ -42,22 +37,17 @@
 * [Contributing](#contributing)
 * [License](#license)
 
-
-
-<!-- ABOUT THE PROJECT -->
 ## About The Project
 
 A simple tool for Kubernetes development clusters. It cycles your pods to use the latest version of each docker image by periodocially checking against the repository.
 
 This is intended for use with development clusters where a `latest` or similar tag is used. By using Shipwright to pull new images rather than have a deploy system that pushes to the cluster, new dev clusters can be quickly spun up and down without modifiying the build pipeline.
 
-
-<!-- GETTING STARTED -->
 ## Getting Started
 
 ### Prerequisites
 
-Kubernetes 1.17+
+Kubernetes 1.19+
 
 Any pod you wish to be cycled by Shipwright must have `imagePullPolicy: Always`
 
@@ -65,9 +55,6 @@ Any pod you wish to be cycled by Shipwright must have `imagePullPolicy: Always`
 
 Helm chart and all-in-one deploy file coming soon
 
-
-
-<!-- USAGE EXAMPLES -->
 ## Usage
 
 Environment Variables:
@@ -78,16 +65,10 @@ Environment Variables:
 
 _For more information, please refer to the [Documentation](https://Dynulo.github.io/Shipwright)_
 
-
-
-<!-- ROADMAP -->
 ## Roadmap
 
 See the [open issues](https://github.com/Dynulo/Shipwright/issues) for a list of proposed features (and known issues).
 
-
-
-<!-- CONTRIBUTING -->
 ## Contributing
 
 Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
@@ -98,23 +79,14 @@ Contributions are what make the open source community such an amazing place to b
 4. Push to the Branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
 
-
-
-<!-- LICENSE -->
 ## License
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
-
-<!-- CONTACT -->
 ## Contact
 
 Project Link: [https://github.com/Dynulo/Shipwright](https://github.com/Dynulo/Shipwright)
 
-
-<!-- MARKDOWN LINKS & IMAGES -->
-<!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [contributors-shield]: https://img.shields.io/github/contributors/Dynulo/Shipwright.svg?style=flat-square
 [contributors-url]: https://github.com/Dynulo/Shipwright/graphs/contributors
 [forks-shield]: https://img.shields.io/github/forks/Dynulo/Shipwright.svg?style=flat-square

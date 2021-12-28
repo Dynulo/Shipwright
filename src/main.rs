@@ -7,8 +7,8 @@ use simplelog::*;
 use dkregistry::v2::Client as DKClient;
 use k8s_openapi::api::core::v1::{Namespace, Pod, Secret};
 use kube::{
-    api::{DeleteParams, ListParams, Meta},
-    Api, Client,
+    api::{DeleteParams, ListParams},
+    Api, Client, ResourceExt,
 };
 use serde::Deserialize;
 
@@ -23,7 +23,12 @@ async fn main() -> Result<(), ()> {
         LevelFilter::Info
     };
 
-    if let Err(e) = TermLogger::init(level, Config::default(), TerminalMode::Mixed) {
+    if let Err(e) = TermLogger::init(
+        level,
+        Config::default(),
+        TerminalMode::Mixed,
+        ColorChoice::Auto,
+    ) {
         println!("unable to initaliaze logger {:?}", e);
         std::process::exit(1)
     };
@@ -66,8 +71,8 @@ async fn main() -> Result<(), ()> {
 
 async fn check(namespace: &str, client: &Client) {
     debug!("checking namespace {:?}", namespace);
-    let pod_api = Api::<Pod>::namespaced(client.clone(), &namespace);
-    let secret_api = Api::<Secret>::namespaced(client.clone(), &namespace);
+    let pod_api = Api::<Pod>::namespaced(client.clone(), namespace);
+    let secret_api = Api::<Secret>::namespaced(client.clone(), namespace);
     let pods = match pod_api.list(&ListParams::default()).await {
         Ok(pods) => {
             debug!("found {:?} pods", pods.items.len());
@@ -167,7 +172,7 @@ async fn look_up_id(
                 let mut secret = None;
                 for ips in vips {
                     if let Some(ips_name) = &ips.name {
-                        if let Ok(pull_secret) = secret_api.get(&ips_name).await {
+                        if let Ok(pull_secret) = secret_api.get(ips_name).await {
                             if let Some(data) = pull_secret.data {
                                 if let Some(s) = data.get(".dockerconfigjson") {
                                     if let Ok(docker_auth) =
